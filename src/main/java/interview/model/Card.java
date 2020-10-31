@@ -41,6 +41,6 @@ public class Card {
 
     @Override
     public String toString() {
-        return "Card " + cardNumber + " has the owner " + name;
+        return "Card " + cardNumber;
     }
 }

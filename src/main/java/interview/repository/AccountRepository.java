@@ -24,7 +24,7 @@ public class AccountRepository {
     }
 
     public ArrayList<Account> getAccountsByOwner(String name) {
-        ArrayList<Account> result = null;
+        ArrayList<Account> result = new ArrayList<>();
 
         for (Account a : accounts) {
             if (a.getOwner().equals(name)) {

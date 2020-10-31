@@ -25,7 +25,7 @@ public class CardRepository {
     }
 
     public ArrayList<Card> getCardsByName(String name) {
-        ArrayList<Card> result = null;
+        ArrayList<Card> result = new ArrayList<>();
 
         for (Card c : cards) {
             if (c.getName().equals(name)) {

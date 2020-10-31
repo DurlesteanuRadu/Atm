@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class AtmApplication {
 
-	public void main(String[] args){
+	public static void main(String[] args){
 		
 		SpringApplication.run(AtmApplication.class, args);
 		
@@ -23,7 +23,7 @@ public class AtmApplication {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		this.AddInfoToRepositories();
+		AddInfoToRepositories();
 		PersonRepository personRepository = PersonRepository.getInstance();
 
 		Person p = personRepository.getPersonByName("Anna");
@@ -32,7 +32,7 @@ public class AtmApplication {
 		p.useAtm(a);
 		}
 		
-	public void AddInfoToRepositories() {
+	public static void AddInfoToRepositories() {
 		
 		PersonRepository personRepository = PersonRepository.getInstance();
 		CardRepository cardRepository = CardRepository.getInstance();
