@@ -41,10 +41,10 @@ public class AtmApplication {
 		personRepository.addPerson("Anna");
 		personRepository.addPerson("Bob");
 
-		cardRepository.addCard(new Card("Anna", "111111", 1234));
-		cardRepository.addCard(new Card("Anna", "222222", 1234));
-		cardRepository.addCard(new Card("Bob", "333333", 1234));
-		cardRepository.addCard(new Card("Bob", "444444", 1234));
+		cardRepository.addCard(new Card("Anna", "111111", "1234"));
+		cardRepository.addCard(new Card("Anna", "222222", "1234"));
+		cardRepository.addCard(new Card("Bob", "333333", "1234"));
+		cardRepository.addCard(new Card("Bob", "444444", "1234"));
 		
 		accountRepository.addAccount(new Account("Anna", "111111", "RON", 1000));
 		accountRepository.addAccount(new Account("Anna", "222222", "USD", 100));

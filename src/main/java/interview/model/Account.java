@@ -5,12 +5,12 @@ public class Account {
     private String owner;
     private String accountNumber;
     private String currency;
-    private long credit;
+    private int credit;
 
     public Account() {
     }
 
-    public Account(String owner, String accountNumber, String currency, long credit) {
+    public Account(String owner, String accountNumber, String currency, int credit) {
         this.owner = owner;
         this.accountNumber = accountNumber;
         this.currency = currency;
@@ -41,11 +41,11 @@ public class Account {
         this.currency = currency;
     }
 
-    public long getCredit() {
+    public int getCredit() {
         return credit;
     }
 
-    public void setCredit(long credit) {
+    public void setCredit(int credit) {
         this.credit = credit;
     }
 
