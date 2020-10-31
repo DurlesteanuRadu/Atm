@@ -1,7 +1,6 @@
 package interview.model;
 
-import javax.swing.JPasswordField;
-import java.io.IOException;
+
 import java.util.Scanner;
 
 public class Atm {
