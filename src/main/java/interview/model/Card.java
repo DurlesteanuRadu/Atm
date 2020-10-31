@@ -2,19 +2,16 @@ package interview.model;
 
 
 public class Card {
-
-
+    
     private String name;
-    private long card_number;
-    private int cvv;
+    private String cardNumber;
     private int pin;
 
     public Card() { }
 
-    public Card(String name, long card_number, int cvv, int pin) {
+    public Card(String name, String cardNumber, int pin) {
         this.name = name;
-        this.card_number = card_number;
-        this.cvv = cvv;
+        this.cardNumber = cardNumber;
         this.pin = pin;
     }
 
@@ -26,20 +23,12 @@ public class Card {
         this.name = name;
     }
 
-    public long getCard_number() {
-        return card_number;
+    public String getCardNumber() {
+        return cardNumber;
     }
 
-    public void setCard_number(long card_number) {
-        this.card_number = card_number;
-    }
-
-    public Integer getCvv() {
-        return cvv;
-    }
-
-    public void setCvv(int cvv) {
-        this.cvv = cvv;
+    public void setCardNumber(String card_number) {
+        this.cardNumber = card_number;
     }
 
     public int getPin() {
@@ -52,6 +41,6 @@ public class Card {
 
     @Override
     public String toString() {
-        return "Card " + card_number + " has the owner " + name + " has the cvv " + cvv;
+        return "Card " + cardNumber + " has the owner " + name;
     }
 }

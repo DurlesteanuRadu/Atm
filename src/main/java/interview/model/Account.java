@@ -3,16 +3,16 @@ package interview.model;
 
 public class Account {
     private String owner;
-    private String account_number;
+    private String accountNumber;
     private String currency;
     private long credit;
 
     public Account() {
     }
 
-    public Account(String owner, String account_number, String currency, long credit) {
+    public Account(String owner, String accountNumber, String currency, long credit) {
         this.owner = owner;
-        this.account_number = account_number;
+        this.accountNumber = accountNumber;
         this.currency = currency;
         this.credit = credit;
     }
@@ -25,12 +25,12 @@ public class Account {
         this.owner = owner;
     }
 
-    public String getAccount_number() {
-        return account_number;
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
-    public void setAccount_number(String account_number) {
-        this.account_number = account_number;
+    public void setAccountNumber(String account_number) {
+        this.accountNumber = account_number;
     }
 
     public String getCurrency() {
@@ -51,6 +51,6 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account " + account_number + " with the owner " + owner + " has " + credit + " " + currency;
+        return "Account " + accountNumber + " with the owner " + owner + " has " + credit + " " + currency;
     }
 }
