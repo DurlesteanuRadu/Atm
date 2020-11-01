@@ -35,11 +35,7 @@ public class Atm {
             return;
         }
 
-
-        value = ChoosingOptions(sc);
-        if (!value) {
-            System.out.println("| Have a nice day!");
-        }
+        ChoosingOptions(sc);
 
         System.out.println("| Have a nice day!");
 
@@ -69,6 +65,8 @@ public class Atm {
         while (true) {
             System.out.print("| ");
             s = sc.nextLine();
+            if (s.equals(""))
+                s = sc.nextLine();
             s = s.toUpperCase();
 
             if (s.equals("Y") || s.equals("YES")) {
@@ -105,7 +103,8 @@ public class Atm {
 
         System.out.println("| Enter your PIN!");
         String pin = "";
-        while (true) {
+        int tries = 3;
+        while (tries > 0) {
             System.out.print("| ");
             sc.nextLine();
             pin = sc.nextLine();
@@ -113,44 +112,76 @@ public class Atm {
                 return false;
             if (pin.equals(Atm.card.getPin()))
                 break;
-            else
-                System.out.println("| Incorrect PIN! Type again!");
+            else {
+                tries--;
+                System.out.println("| Incorrect PIN! You have " + tries + " tries left!");
+                if (tries == 0) {
+                    System.out.println("| Your card has been retained!");
+                    cardRepository.deleteCard(Atm.card);
+                    return false;
+                }
+            }
+
         }
         return true;
     }
 
-    private boolean ChoosingOptions(Scanner sc) {
-        System.out.println("| Choose your preferred option!");
-        System.out.println("| 1. Withdraw cash       4. Deposit cash");
-        System.out.println("| 2. Check your balance  0. Exit");
-        System.out.println("| 3. Change your PIN   ");
-
-        int nr;
+    private void ChoosingOptions(Scanner sc) {
         while (true) {
-            System.out.print("| ");
-            nr = sc.nextInt();
-            if (0 <= nr && nr <= 4)
-                break;
-            else
-                System.out.println("| Choose a valid option!");
+            System.out.println("| Choose your preferred option!");
+            System.out.println("| 1. Withdraw cash       4. Deposit cash");
+            System.out.println("| 2. Check your balance  0. Exit");
+            System.out.println("| 3. Change your PIN   ");
+
+            int nr;
+            boolean value = true;
+            String s;
+            while (true) {
+                System.out.print("| ");
+                nr = sc.nextInt();
+                if (0 <= nr && nr <= 4)
+                    break;
+                else
+                    System.out.println("| Choose a valid option!");
             }
-        switch (nr) {
-            case 0:
-                return false;
-            case 1:
-                WithdrawCash(sc);
-                break;
-            case 2:
-                CheckBalance();
-                break;
-            case 3:
-                ChangePIN(sc);
-                break;
-            case 4:
-                DepositCash(sc);
-                break;
+            switch (nr) {
+                case 0:
+                    return;
+                case 1:
+                    value = WithdrawCash(sc);
+                    break;
+                case 2:
+                    value = CheckBalance();
+                    break;
+                case 3:
+                    value = ChangePIN(sc);
+                    break;
+                case 4:
+                    value = DepositCash(sc);
+                    break;
+            }
+            if (!value)
+                return;
+            else {
+                System.out.println("| Would you like another service? (Y/N)");
+                while (true) {
+                    System.out.print("| ");
+                    s = sc.nextLine();
+                    if (s.equals(""))
+                        s = sc.nextLine();
+                    s = s.toUpperCase();
+
+                    if (s.equals("Y") || s.equals("YES")) {
+                        break;
+                    }
+
+                    if (s.equals("N") || s.equals("NO") || s.equals("0"))
+                        return;
+                    System.out.println("| Type a valid answer! (Y/N)");
+                }
+            }
         }
-        return true;
+
     }
 
     private boolean WithdrawCash(Scanner sc) {
@@ -230,18 +261,29 @@ public class Atm {
 
     private boolean ChangePIN(Scanner sc) {
         String pin = "";
+        CardRepository cardRepository = CardRepository.getInstance();
 
         System.out.println("| Enter your old PIN!");
-        while (true) {
+
+        int tries = 3;
+        while (tries > 0) {
             System.out.print("| ");
-            sc.nextLine();
             pin = sc.nextLine();
+            if (pin.equals(""))
+                pin = sc.nextLine();
             if (pin.equals("0"))
                 return false;
             if (pin.equals(Atm.card.getPin()))
                 break;
-            else
-                System.out.println("| Incorrect PIN! Type again!");
+            else {
+                tries--;
+                System.out.println("| Incorrect PIN! You have " + tries + " tries left!");
+                if (tries == 0) {
+                    System.out.println("| Your card has been retained!");
+                    cardRepository.deleteCard(Atm.card);
+                    return false;
+                }
+            }
         }
 
         System.out.println("| Enter your new PIN!");
@@ -250,12 +292,16 @@ public class Atm {
             pin = sc.nextLine();
             if (pin.equals("0"))
                 return false;
-            if (pin.length() == 4) {
-                System.out.println("| Your new PIN has been set!");
-                break;
-            }
+            if (pin.equals(Atm.card.getPin()))
+                System.out.println("| New PIN can't be the same as old PIN!");
             else
-                System.out.println("| Invalid PIN! Type again!");
+                if (pin.length() == 4) {
+                    System.out.println("| Your new PIN has been set!");
+                    Atm.card.setPin(pin);
+                    break;
+                }
+                else
+                    System.out.println("| Invalid PIN! Type again! (It has to have 4 digits)");
         }
 
         return true;
@@ -267,7 +313,7 @@ public class Atm {
         int nr;
 
         System.out.println("| Enter the amount of credit you deposit!");
-        System.out.println("| ");
+        System.out.print("| ");
         nr = sc.nextInt();
         if (nr == 0)
             return false;

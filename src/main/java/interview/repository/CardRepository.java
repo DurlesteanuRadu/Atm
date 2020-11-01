@@ -47,4 +47,6 @@ public class CardRepository {
     public void addCard(Card c) {
         cards.add(c);
     }
+
+    public void deleteCard(Card c) { cards.remove(c); }
 }
