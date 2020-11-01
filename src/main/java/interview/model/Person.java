@@ -1,5 +1,7 @@
 package interview.model;
 
+import interview.log.LogService;
+
 import java.util.Set;
 
 public class Person {
@@ -27,7 +29,13 @@ public class Person {
     }
 
     public void useAtm(Atm atm){
+        LogService logService = LogService.getInstance();
+        logService.start();
+        logService.record("Person " + name + " started using the ATM");
+
         atm.start(this);
+
+        logService.record("Person " + name + " stopped using the ATM");
     }
 
     public Set<Card> ownedCards() {

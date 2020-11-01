@@ -3,6 +3,7 @@ package interview.model;
 
 import interview.repository.AccountRepository;
 import interview.repository.CardRepository;
+import interview.log.LogService;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -57,6 +58,7 @@ public class Atm {
         CardRepository cardRepository = CardRepository.getInstance();
         AccountRepository accountRepository = AccountRepository.getInstance();
         ArrayList<Card> cards = cardRepository.getCardsByName(p.getName());
+        LogService logService = LogService.getInstance();
 
         String s;
         int nr;
@@ -87,7 +89,7 @@ public class Atm {
             System.out.println("| Type a valid answer! (Y/N)");
         }
 
-        System.out.println("| Insert your card!");
+        System.out.println("| Insert your card! (type index of your card)");
 
         while (true) {
             System.out.print("| ");
@@ -100,6 +102,8 @@ public class Atm {
                 System.out.println("| Choose a valid card! You only have " + (cards.size()) + " cards!");
         }
         Atm.card = cards.get(nr-1);
+
+        logService.record("Person " + p.getName() + " inserted Card " + Atm.card.getCardNumber());
 
         System.out.println("| Enter your PIN!");
         String pin = "";
@@ -116,8 +120,11 @@ public class Atm {
                 tries--;
                 System.out.println("| Incorrect PIN! You have " + tries + " tries left!");
                 if (tries == 0) {
-                    System.out.println("| Your card has been retained!");
+                    System.out.println("| Your card has been detained!");
                     cardRepository.deleteCard(Atm.card);
+
+                    logService.record("Detained Card " + Atm.card.getCardNumber());
+
                     return false;
                 }
             }
@@ -188,8 +195,8 @@ public class Atm {
         AccountRepository accountRepository = AccountRepository.getInstance();
 
         int[] sums = {0, 10, 50, 100, 250, 500, 1000};
-        Account a = accountRepository.getAccountByNumber(Atm.card.getCardNumber());
-        int credit = a.getCredit();
+        Account account = accountRepository.getAccountByNumber(Atm.card.getCardNumber());
+        int credit = account.getCredit();
 
         System.out.println("| Choose what sum you want to withdraw!");
         System.out.println("| 1. 10   5. 500");
@@ -207,8 +214,13 @@ public class Atm {
                 return false;
             if (1 <= nr && nr <= 6)
                 if (credit >= sums[nr]) {
-                    a.setCredit(credit - sums[nr]);
+                    account.setCredit(credit - sums[nr]);
                     System.out.println("| Please wait while we process your transaction!");
+
+                    LogService logService = LogService.getInstance();
+                    logService.record("Withdrawn " + sums[nr] + account.getCurrency()
+                            + "from Card" + Atm.card.getCardNumber());
+
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException e) {
@@ -228,10 +240,17 @@ public class Atm {
             while (true) {
                 System.out.print("| ");
                 nr = sc.nextInt();
+                if (nr == 0)
+                    return false;
                 if (nr % 10 == 0)
                     if (credit >= nr) {
-                        a.setCredit(credit - nr);
+                        account.setCredit(credit - nr);
                         System.out.println("| Please wait while we process your transaction!");
+
+                        LogService logService = LogService.getInstance();
+                        logService.record("Withdrawn " + nr + account.getCurrency()
+                                + "from Card" + Atm.card.getCardNumber());
+
                         try {
                             Thread.sleep(3000);
                         } catch (InterruptedException e) {
@@ -254,14 +273,18 @@ public class Atm {
     private boolean CheckBalance() {
         AccountRepository accountRepository = AccountRepository.getInstance();
         Account account = accountRepository.getAccountByNumber(Atm.card.getCardNumber());
+        LogService logService = LogService.getInstance();
 
         System.out.println("| Your Balance: " + account.getCredit() + account.getCurrency());
+
+        logService.record("Checked balance of Card " + Atm.card.getCardNumber());
         return true;
     }
 
     private boolean ChangePIN(Scanner sc) {
         String pin = "";
         CardRepository cardRepository = CardRepository.getInstance();
+        LogService logService = LogService.getInstance();
 
         System.out.println("| Enter your old PIN!");
 
@@ -281,6 +304,9 @@ public class Atm {
                 if (tries == 0) {
                     System.out.println("| Your card has been retained!");
                     cardRepository.deleteCard(Atm.card);
+
+                    logService.record("Detained Card " + Atm.card.getCardNumber());
+
                     return false;
                 }
             }
@@ -298,6 +324,9 @@ public class Atm {
                 if (pin.length() == 4) {
                     System.out.println("| Your new PIN has been set!");
                     Atm.card.setPin(pin);
+
+                    logService.record("Changed PIN of Card " + Atm.card.getCardNumber());
+
                     break;
                 }
                 else
@@ -310,6 +339,8 @@ public class Atm {
     private boolean DepositCash(Scanner sc) {
         AccountRepository accountRepository = AccountRepository.getInstance();
         Account account = accountRepository.getAccountByNumber(Atm.card.getCardNumber());
+        LogService logService = LogService.getInstance();
+
         int nr;
 
         System.out.println("| Enter the amount of credit you deposit!");
@@ -320,6 +351,7 @@ public class Atm {
 
         account.setCredit(account.getCredit() + nr);
 
+        logService.record("Deposited " + nr + account.getCurrency() + " to Card " + Atm.card.getCardNumber());
         return true;
     }
 }

@@ -26,7 +26,7 @@ public class AtmApplication {
 		AddInfoToRepositories();
 		PersonRepository personRepository = PersonRepository.getInstance();
 
-		Person p = personRepository.getPersonByName("Anna");
+		Person p = personRepository.getPersonByName("Bob");
 		Atm a = Atm.getInstance();
 		
 		p.useAtm(a);
@@ -48,8 +48,8 @@ public class AtmApplication {
 		
 		accountRepository.addAccount(new Account("Anna", "111111", "RON", 1000));
 		accountRepository.addAccount(new Account("Anna", "222222", "USD", 100));
-		accountRepository.addAccount(new Account("Bob", "111111", "RON", 2000));
-		accountRepository.addAccount(new Account("Bob", "111111", "EUR", 50));
+		accountRepository.addAccount(new Account("Bob", "333333", "RON", 2000));
+		accountRepository.addAccount(new Account("Bob", "444444", "EUR", 50));
 		
 	}
 
