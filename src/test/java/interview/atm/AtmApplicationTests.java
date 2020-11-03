@@ -2,6 +2,7 @@ package interview.atm;
 
 import interview.model.Atm;
 import interview.model.Person;
+import interview.repository.CardRepository;
 import interview.repository.PersonRepository;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.AfterEach;
@@ -21,8 +22,8 @@ class AtmApplicationTests {
 	private Person p;
 	private Atm a;
 	private Scanner sc;
-	private ByteArrayOutputStream baos;
-	private PrintStream ps, old;
+	private ByteArrayOutputStream outputStream;
+	private PrintStream old;
 
 	@BeforeEach
 	void setUp() {
@@ -31,28 +32,46 @@ class AtmApplicationTests {
 		p = personRepository.getPersonByName("Anna");
 		a = Atm.getInstance();
 
-		baos = new ByteArrayOutputStream();
-		ps = new PrintStream(baos);
+		outputStream = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(outputStream);
 		old = System.out;
 		System.setOut(ps);
 	}
 
-	@AfterEach
-	void tearDown() {
-
-	}
-
 	@Test
-	void InsertCardTest() {
-		String data = "nO\r\n1\r\n1235\r\n1234\r\n";
+	void InsertCardRightPINTest() {
+		int cardIndex = 1;
+		String data = "nO\r\n" + cardIndex + "\r\n";
+		data += CardRepository.getInstance().getCardsByName(p.getName()).get(cardIndex-1).getPin() + "\r\n";
 		System.setIn(new ByteArrayInputStream(data.getBytes()));
-
 		sc = new Scanner(System.in);
-		a.InsertCard(sc, p);
+
+		boolean result = a.InsertCard(sc, p);
+		assert result;
 
 		System.out.flush();
 		System.setOut(old);
 
-		System.out.println("***Output: " + baos.toString());
+		System.out.println("***Output: " + outputStream.toString());
+	}
+
+	@Test
+	void InsertCardWrongPINTest() {
+		int cardIndex = 1;
+		String pin = CardRepository.getInstance().getCardsByName(p.getName()).get(cardIndex-1).getPin();
+		pin = pin.substring(0, 2) + "*";
+
+		String data = "nO\r\n" + cardIndex + "\r\n";
+		data += pin + "\r\n" + pin + "\r\n" + pin;
+		System.setIn(new ByteArrayInputStream(data.getBytes()));
+		sc = new Scanner(System.in);
+
+		boolean result = a.InsertCard(sc, p);
+		assert !result;
+
+		System.out.flush();
+		System.setOut(old);
+
+		System.out.println("***Output: " + outputStream.toString());
 	}
 }
