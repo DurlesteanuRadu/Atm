@@ -16,6 +16,10 @@ public class Atm {
     public Atm() {
     }
 
+    public static void setCard(Card card) {
+        Atm.card = card;
+    }
+
     public static Atm getInstance() {
         if (instance == null)
             instance = new Atm();
@@ -191,7 +195,7 @@ public class Atm {
 
     }
 
-    private boolean WithdrawCash(Scanner sc) {
+    public boolean WithdrawCash(Scanner sc) {
         AccountRepository accountRepository = AccountRepository.getInstance();
 
         int[] sums = {0, 10, 50, 100, 250, 500, 1000};
@@ -270,7 +274,7 @@ public class Atm {
 
     }
 
-    private boolean CheckBalance() {
+    public boolean CheckBalance() {
         AccountRepository accountRepository = AccountRepository.getInstance();
         Account account = accountRepository.getAccountByNumber(Atm.card.getCardNumber());
         LogService logService = LogService.getInstance();
@@ -281,7 +285,7 @@ public class Atm {
         return true;
     }
 
-    private boolean ChangePIN(Scanner sc) {
+    public boolean ChangePIN(Scanner sc) {
         String pin;
         CardRepository cardRepository = CardRepository.getInstance();
         LogService logService = LogService.getInstance();
@@ -321,7 +325,7 @@ public class Atm {
             if (pin.equals(Atm.card.getPin()))
                 System.out.println("| New PIN can't be the same as old PIN!");
             else
-                if (pin.length() == 4) {
+                if (pin.length() == 4 && pin.chars().allMatch( Character::isDigit )) {
                     System.out.println("| Your new PIN has been set!");
                     Atm.card.setPin(pin);
 
@@ -336,7 +340,7 @@ public class Atm {
         return true;
     }
 
-    private boolean DepositCash(Scanner sc) {
+    public boolean DepositCash(Scanner sc) {
         AccountRepository accountRepository = AccountRepository.getInstance();
         Account account = accountRepository.getAccountByNumber(Atm.card.getCardNumber());
         LogService logService = LogService.getInstance();
@@ -350,6 +354,8 @@ public class Atm {
             return false;
 
         account.setCredit(account.getCredit() + nr);
+
+        System.out.println("| Your credit has been added to the account!");
 
         logService.record("Deposited " + nr + account.getCurrency() + " to Card " + Atm.card.getCardNumber());
         return true;
