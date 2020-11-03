@@ -12,3 +12,20 @@ Person Bob inserted Card 333333,01:Nov:2020 15:53:06
 Changed PIN of Card 333333,01:Nov:2020 15:53:13
 Deposited 10RON to Card 333333,01:Nov:2020 15:53:20
 Person Bob stopped using the ATM,01:Nov:2020 15:53:26
+Person Anna inserted Card 111111,03:Nov:2020 15:40:12
+Person Anna inserted Card 111111,03:Nov:2020 15:47:23
+Person Anna inserted Card 111111,03:Nov:2020 15:48:11
+Person Anna inserted Card 111111,03:Nov:2020 15:48:49
+Person Anna inserted Card 111111,03:Nov:2020 15:49:09
+Person Anna inserted Card 111111,03:Nov:2020 15:50:25
+--------------------------------,---------------------
+Person Bob started using the ATM,03:Nov:2020 15:52:15
+Person Bob inserted Card 333333,03:Nov:2020 15:52:35
+Person Anna inserted Card 111111,03:Nov:2020 15:53:24
+Person Anna inserted Card 111111,03:Nov:2020 15:53:57
+Person Anna inserted Card 111111,03:Nov:2020 15:55:15
+Person Anna inserted Card 111111,03:Nov:2020 15:59:50
+Person Anna inserted Card 111111,03:Nov:2020 16:00:34
+--------------------------------,---------------------
+Person Bob started using the ATM,03:Nov:2020 16:02:02
+Person Bob inserted Card 333333,03:Nov:2020 16:02:17

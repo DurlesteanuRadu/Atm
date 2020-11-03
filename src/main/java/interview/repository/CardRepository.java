@@ -3,11 +3,12 @@ package interview.repository;
 import interview.model.Card;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CardRepository {
 
     private static CardRepository instance;
-    private static ArrayList<Card> cards;
+    private static List<Card> cards;
 
     public CardRepository() {
         cards = new ArrayList<Card>();
@@ -20,12 +21,12 @@ public class CardRepository {
         return instance;
     }
 
-    public ArrayList<Card> getCards() {
+    public List<Card> getCards() {
         return cards;
     }
 
-    public ArrayList<Card> getCardsByName(String name) {
-        ArrayList<Card> result = new ArrayList<>();
+    public List<Card> getCardsByName(String name) {
+        List<Card> result = new ArrayList<>();
 
         for (Card c : cards) {
             if (c.getName().equals(name)) {

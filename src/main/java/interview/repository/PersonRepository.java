@@ -3,11 +3,12 @@ package interview.repository;
 import interview.model.Person;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PersonRepository {
 
     private static PersonRepository instance;
-    private static ArrayList<Person> persons;
+    private static List<Person> persons;
 
     public PersonRepository() {
         persons = new ArrayList<Person>();
@@ -20,7 +21,7 @@ public class PersonRepository {
         return instance;
     }
 
-    public ArrayList<Person> getPersons() {
+    public List<Person> getPersons() {
         return persons;
     }
 

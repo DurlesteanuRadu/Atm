@@ -5,7 +5,7 @@ import interview.repository.AccountRepository;
 import interview.repository.CardRepository;
 import interview.log.LogService;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Atm {
@@ -26,7 +26,6 @@ public class Atm {
     public void start(Person p) {
         Scanner sc = new Scanner(System.in);
         boolean value;
-        int nr = 0;
 
         IntroductionMessages();
 
@@ -54,10 +53,10 @@ public class Atm {
         }
     }
 
-    private boolean InsertCard(Scanner sc, Person p) {
+    public boolean InsertCard(Scanner sc, Person p) {
         CardRepository cardRepository = CardRepository.getInstance();
         AccountRepository accountRepository = AccountRepository.getInstance();
-        ArrayList<Card> cards = cardRepository.getCardsByName(p.getName());
+        List<Card> cards = cardRepository.getCardsByName(p.getName());
         LogService logService = LogService.getInstance();
 
         String s;
@@ -106,11 +105,12 @@ public class Atm {
         logService.record("Person " + p.getName() + " inserted Card " + Atm.card.getCardNumber());
 
         System.out.println("| Enter your PIN!");
-        String pin = "";
+        String pin;
         int tries = 3;
         while (tries > 0) {
             System.out.print("| ");
-            sc.nextLine();
+            if (tries == 3)
+                sc.nextLine();
             pin = sc.nextLine();
             if (pin.equals("0"))
                 return false;
@@ -249,7 +249,7 @@ public class Atm {
 
                         LogService logService = LogService.getInstance();
                         logService.record("Withdrawn " + nr + account.getCurrency()
-                                + "from Card" + Atm.card.getCardNumber());
+                                + " from Card" + Atm.card.getCardNumber());
 
                         try {
                             Thread.sleep(3000);
@@ -282,7 +282,7 @@ public class Atm {
     }
 
     private boolean ChangePIN(Scanner sc) {
-        String pin = "";
+        String pin;
         CardRepository cardRepository = CardRepository.getInstance();
         LogService logService = LogService.getInstance();
 

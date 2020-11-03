@@ -2,11 +2,12 @@ package interview.repository;
 
 import interview.model.Account;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AccountRepository {
 
     private static AccountRepository instance;
-    private static ArrayList<Account> accounts;
+    private static List<Account> accounts;
 
     public AccountRepository() {
         accounts = new ArrayList<Account>();
@@ -19,12 +20,12 @@ public class AccountRepository {
         return instance;
     }
 
-    public ArrayList<Account> getAccounts() {
+    public List<Account> getAccounts() {
         return accounts;
     }
 
-    public ArrayList<Account> getAccountsByOwner(String name) {
-        ArrayList<Account> result = new ArrayList<>();
+    public List<Account> getAccountsByOwner(String name) {
+        List<Account> result = new ArrayList<>();
 
         for (Account a : accounts) {
             if (a.getOwner().equals(name)) {
