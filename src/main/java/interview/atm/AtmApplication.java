@@ -17,23 +17,25 @@ public class AtmApplication {
 	public static void main(String[] args){
 		
 		SpringApplication.run(AtmApplication.class, args);
-		
+
+		// Small delay to let the Spring Boot app initialize
+		// so it won't interfere with the Atm App
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+
 		AddInfoToRepositories();
 		PersonRepository personRepository = PersonRepository.getInstance();
-
 		Person p = personRepository.getPersonByName("Bob");
 		Atm a = Atm.getInstance();
-		
 		p.useAtm(a);
 		}
 		
 	public static void AddInfoToRepositories() {
-		
+
+		// Adding data to Repositories
 		PersonRepository personRepository = PersonRepository.getInstance();
 		CardRepository cardRepository = CardRepository.getInstance();
 		AccountRepository accountRepository = AccountRepository.getInstance();

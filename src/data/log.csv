@@ -1,4 +1,4 @@
-Action,Timestamp
+Action, Timestamp
 --------------------------------,---------------------
 Person Bob started using the ATM,01:Nov:2020 15:49:31
 Person Bob inserted Card 333333,01:Nov:2020 15:51:20
@@ -130,3 +130,6 @@ Withdrawn 10RONfrom Card111111,03:Nov:2020 19:56:22
 Person Anna inserted Card 111111,03:Nov:2020 19:56:25
 Detained Card 111111,03:Nov:2020 19:56:25
 Checked balance of Card 222222,03:Nov:2020 19:56:25
+--------------------------------,---------------------
+Person Bob started using the ATM,04:Nov:2020 03:32:18
+Person Bob inserted Card 333333,04:Nov:2020 03:32:30

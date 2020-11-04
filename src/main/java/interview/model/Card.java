@@ -14,11 +14,6 @@ public class Card {
         this.cardNumber = cardNumber;
         this.pin = pin;
     }
-    public void Copy(Card c) {
-        this.name = c.name;
-        this.cardNumber = c.cardNumber;
-        this.pin = c.pin;
-    }
 
     public String getName() {
         return name;

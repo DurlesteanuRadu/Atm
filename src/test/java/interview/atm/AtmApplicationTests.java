@@ -28,21 +28,35 @@ class AtmApplicationTests {
 	void setUp() {
 		AtmApplication.AddInfoToRepositories();
 		PersonRepository personRepository = PersonRepository.getInstance();
+
 		person = personRepository.getPersonByName("Anna");
 		atm = Atm.getInstance();
 		card = CardRepository.getInstance().getCardsByName(person.getName()).get(cardIndex-1);
 		account = AccountRepository.getInstance().getAccountByNumber(card.getCardNumber());
+
 		Atm.setCard(card);
+
+		// Creating a new stream to process the output
 		outputStream = new ByteArrayOutputStream();
-		PrintStream ps = new PrintStream(outputStream);
+		PrintStream printStream = new PrintStream(outputStream);
+		// Remembering the old stream, in order to restore it
 		old = System.out;
-		System.setOut(ps);
+		// Using the new printing stream to write output
+		System.setOut(printStream);
 	}
 
+	/** Input format:
+	 *  No
+	 *  cardIndex
+	 *  PIN
+	 */
 	@Test
 	void InsertCardRightPINTest() {
+		// The input for the test
 		String data = "No\r\n" + cardIndex + "\r\n";
 		data += card.getPin() + "\r\n";
+
+		// Setting in the input so that the program can read it from the console
 		System.setIn(new ByteArrayInputStream(data.getBytes()));
 		sc = new Scanner(System.in);
 
@@ -56,13 +70,24 @@ class AtmApplicationTests {
 		System.out.println("***Output: " + outputStream.toString());
 	}
 
+	/** Input format:
+	 *  No
+	 *  cardIndex
+	 *  PIN
+	 *  PIN
+	 *  PIN
+	 */
 	@Test
 	void InsertCardWrongPINTest() {
+		// Getting the right PIN and replacing the last digit with a '*', making it invalid
 		String pin = card.getPin();
 		pin = pin.substring(0, 2) + "*";
 
+		// The input for the test
 		String data = "No\r\n" + cardIndex + "\r\n";
-		data += pin + "\r\n" + pin + "\r\n" + pin;
+		data += pin + "\r\n" + pin + "\r\n" + pin; // 3 wrong pins will result in detained card
+
+		// Setting in the input so that the program can read it from the console
 		System.setIn(new ByteArrayInputStream(data.getBytes()));
 		sc = new Scanner(System.in);
 
@@ -76,22 +101,32 @@ class AtmApplicationTests {
 		System.out.println("***Output: " + outputStream.toString());
 	}
 
+	/** Input format:
+	 *  value1
+	 *  value2
+	 */
 	@Test
 	void ChooseWithdraw1to6Test() {
-		int value1 = 9;
-		int value2 = 1;
+		int value1 = 9; // An invalid value
+		int value2 = 1; // A valid value
+
+		// The input for the test
 		String data = value1 + "\r\n" + value2 + "\r\n";
+
+		// Setting in the input so that the program can read it from the console
 		System.setIn(new ByteArrayInputStream(data.getBytes()));
 		sc = new Scanner(System.in);
+
 		int[] sums = {0, 10, 50, 100, 250, 500, 1000};
 		int initialCredit = account.getCredit();
 
 		boolean result = atm.WithdrawCash(sc);
+		// Splitting the output into lines lets the Test check it
 		String[] lines = outputStream.toString().split("\\r\\n");
 		assert result;
 		assert account.getCredit() + sums[value2] == initialCredit;
-		assert lines[5].endsWith("Choose a valid option!");
-		assert lines[6].endsWith("Please wait while we process your transaction!");
+		assert lines[5].endsWith("Choose a valid option!");  // First value should be invalid
+		assert lines[6].endsWith("Please wait while we process your transaction!"); // Second value should be valid
 
 		System.out.flush();
 		System.setOut(old);
@@ -99,27 +134,39 @@ class AtmApplicationTests {
 		System.out.println("***Output: " + outputStream.toString());
 	}
 
+	/** Input format:
+	 *  value1
+	 *  value2
+	 */
 	@Test
 	void ChooseWithdraw7Test() {
 		int value1 = 121;
 		int value2 = 120;
+
+		// The input for the test
 		String data = "7\r\n" + value1 + "\r\n" + value2 + "\r\n";
+
+		// Setting in the input so that the program can read it from the console
 		System.setIn(new ByteArrayInputStream(data.getBytes()));
 		sc = new Scanner(System.in);
+
 		int initialCredit = account.getCredit();
 
 		boolean result = atm.WithdrawCash(sc);
+		// Splitting the output into lines lets the Test check it
 		String[] lines = outputStream.toString().split("\\r\\n");
 		assert result;
 		assert account.getCredit() + value2 == initialCredit;
-		assert lines[6].endsWith("You need to enter a sum multiple of 10!");
-		assert lines[7].endsWith("Please wait while we process your transaction!");
+		assert lines[6].endsWith("You need to enter a sum multiple of 10!"); // First value should be invalid
+		assert lines[7].endsWith("Please wait while we process your transaction!"); // Second value should be valid
 
 		System.out.flush();
 		System.setOut(old);
 
 		System.out.println("***Output: " + outputStream.toString());
 	}
+
+	/** No Input required */
 
 	@Test
 	void CheckBalanceTest() {
@@ -134,21 +181,31 @@ class AtmApplicationTests {
 		System.out.println("***Output: " + outputStream.toString());
 	}
 
+	/** Input format:
+	 *  oldPin
+	 *  newPin1
+	 *  newPin2
+	 *  newPin3
+	 *  newPin4
+	 */
 	@Test
 	void ChangePinTest() {
 		String oldPin = card.getPin();
-		String newPin1 = "11111";
-		String newPin2 = "abcd";
-		String newPin3 = "1234";
-		String newPin4 = "9999";
+		String newPin1 = "11111"; // Too many digits
+		String newPin2 = "abcd";  // Other characters than digits
+		String newPin3 = "1234";  // Same as old PIN
+		String newPin4 = "9999";  // Valid new PIN
 
-
+		// The input for the test
 		String data = oldPin + "\r\n" + newPin1 + "\r\n" + newPin2 + "\r\n" + newPin3 + "\r\n" + newPin4 + "\r\n";
+
+		// Setting in the input so that the program can read it from the console
 		System.setIn(new ByteArrayInputStream(data.getBytes()));
 		sc = new Scanner(System.in);
 
 		boolean result = atm.ChangePIN(sc);
 		String[] lines = outputStream.toString().split("\\r\\n");
+		// Splitting the output into lines lets the Test check it
 		assert result;
 		assert lines[2].endsWith("Invalid PIN! Type again! (It has to have 4 digits)");
 		assert lines[3].endsWith("Invalid PIN! Type again! (It has to have 4 digits)");
@@ -162,11 +219,18 @@ class AtmApplicationTests {
 		System.out.println("***Output: " + outputStream.toString());
 	}
 
+	/** Input format:
+	 *  value
+	 */
 	@Test
 	void DepositCashTest() {
 		int value = 1000;
 		int oldCredit = account.getCredit();
+
+		// The input for the test
 		String data = value + "\r\n";
+
+		// Setting in the input so that the program can read it from the console
 		System.setIn(new ByteArrayInputStream(data.getBytes()));
 		sc = new Scanner(System.in);
 
@@ -181,13 +245,23 @@ class AtmApplicationTests {
 		System.out.println("***Output: " + outputStream.toString());
 	}
 
+	/** Input format:
+	 *  0
+	 *  0
+	 *  0
+	 *  0
+	 *  0
+	 */
 	@Test
 	void CheckForExit() {
+		// The input for the test
 		String data = "0\r\n0\r\n0\r\n0\r\n0\r\n";
 
+		// Setting in the input so that the program can read it from the console
 		System.setIn(new ByteArrayInputStream(data.getBytes()));
 		sc = new Scanner(System.in);
 
+		// Check to see if all methods return false after receiving 0 as an input
 		boolean result = atm.InsertCard(sc, person);
 		assert !result;
 		result = atm.DepositCash(sc);

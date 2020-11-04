@@ -6,7 +6,6 @@ import java.util.Set;
 
 public class Person {
 
-    private int id;
     private String name;
 
     public Person(String name) {
@@ -28,6 +27,7 @@ public class Person {
         return "Person " + name;
     }
 
+    // Method that allows the person to start using the ATM
     public void useAtm(Atm atm){
         LogService logService = LogService.getInstance();
         logService.start();

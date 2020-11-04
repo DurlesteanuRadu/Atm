@@ -2,27 +2,15 @@ package interview.log;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 public final class LogService {
-    private static String path = "src/data/log.csv";
-    private static String header = "Action,Timestamp";
+    private static final String path = "src/data/log.csv";
     private static LogService instance;
 
     private LogService() {
-        /*FileWriter logWriter = null;
-        try {
-            logWriter = new FileWriter(path);
-            logWriter.append(header);
-            logWriter.append(String.valueOf('\n'));
-            logWriter.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+
     }
 
     public static LogService getInstance() {
@@ -50,6 +38,7 @@ public final class LogService {
         }
     }
 
+    // Method called to separate different sessions of Atm usage
     public void start() {
         FileWriter logWriter = null;
         try {
